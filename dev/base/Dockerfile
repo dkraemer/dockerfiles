@@ -11,7 +11,7 @@ RUN DEBIAN_FRONTEND=noninteractive \
     #
     # Install required packages
     DEBIAN_FRONTEND=noninteractive \
-    apt-get install -y git curl && \ 
+    apt-get install -y git curl xz-utils && \ 
     #
     # Install & setup packages for interactive mode
     DEBIAN_FRONTEND=noninteractive \
