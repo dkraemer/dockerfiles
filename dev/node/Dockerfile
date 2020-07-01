@@ -1,16 +1,20 @@
-FROM dkraemer/dev-base:latest
+FROM node:lts-buster
 
-ARG node_version
-
-# Install node.js 
-RUN curl -sSLO https://nodejs.org/dist/${node_version}/node-${node_version}-linux-x64.tar.xz && \
-    tar xfa node-${node_version}-linux-x64.tar.xz -C /opt --no-same-owner && \
-    rm -fv node-${node_version}-linux-x64.tar.xz && \
-    # Install yarn
-    export PATH=${PATH}:/opt/node-${node_version}-linux-x64/bin && \
-    npm install -g yarn && \
-    ln -sv /opt/node-${node_version}-linux-x64/bin/* /usr/local/bin && \
-    # Install additional packages
-    yarn global add typescript tsdx 
+RUN apt-get update && \ 
+    export DEBIAN_FRONTEND=noninteractive && \
+    #
+    # Prevent 'apt-utils not installed' messages
+    apt-get install -y apt-utils && \
+    #
+    # Install & setup packages for interactive mode
+    apt-get install -y dialog locales && \
+    echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen && \
+    locale-gen && \
+    #
+    # Upgrade packages and clean-up
+    apt-get upgrade -y && \
+    apt-get autoremove -y --purge && \
+    apt-get clean -y && \
+    rm -rf /var/lib/apt/lists/*
 
 ENTRYPOINT [ "/bin/bash" ]
